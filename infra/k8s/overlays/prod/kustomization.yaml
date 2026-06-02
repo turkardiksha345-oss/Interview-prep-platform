@@ -1,0 +1,10 @@
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/your-org/interview-prep-backend
+    newTag: latest
+  - name: ghcr.io/your-org/interview-prep-frontend
+    newTag: latest
+replicas:
+  - name: frontend
+    count: 3

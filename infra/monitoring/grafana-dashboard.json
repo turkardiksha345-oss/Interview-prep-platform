@@ -1,0 +1,17 @@
+{
+  "title": "Interview Prep Platform",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "API Request Rate",
+      "targets": [{ "expr": "sum(rate(http_requests_total[5m]))" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "Pod CPU",
+      "targets": [{ "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"interview-prep\"}[5m])) by (pod)" }]
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1
+}
