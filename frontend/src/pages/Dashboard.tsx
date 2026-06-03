@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
-import { Award, Flame, Target, Trophy } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Award, Flame, Target, Trophy, ArrowRight, Zap, BrainCircuit, FileSearch } from "lucide-react";
 import { api } from "../api/client";
 
 type Stats = { solved: number; attempted: number; streak_days: number; badges: string[]; leaderboard_rank: number };
 
+type ServiceCard = { title: string; description: string; path: string; icon: typeof ArrowRight };
+
 export function Dashboard() {
   const [stats, setStats] = useState<Stats>({ solved: 0, attempted: 0, streak_days: 0, badges: [], leaderboard_rank: 0 });
+  const navigate = useNavigate();
+
+  const serviceCards: ServiceCard[] = [
+    { title: "Practice tests", description: "Solve curated problems and instantly review your score.", path: "/practice", icon: Zap },
+    { title: "Mock interviews", description: "Polish answers with AI scoring and coaching feedback.", path: "/interviews", icon: BrainCircuit },
+    { title: "Resume analyzer", description: "Get ATS-ready resume suggestions and role alignment.", path: "/resume", icon: FileSearch },
+    { title: "Performance review", description: "Track progress, streaks, and your personal readiness score.", path: "/scorecard", icon: Trophy },
+  ];
 
   useEffect(() => {
     api.get("/dashboard").then((res) => setStats(res.data)).catch(() => undefined);
@@ -26,6 +37,18 @@ export function Dashboard() {
         <article className="metric-card"><BarIcon /><span>Attempts</span><strong>{stats.attempted}</strong><em>accuracy improving</em></article>
         <article className="metric-card"><Flame size={20} /><span>Streak</span><strong>{stats.streak_days}d</strong><em>keep momentum</em></article>
         <article className="metric-card"><Trophy size={20} /><span>Rank</span><strong>#{stats.leaderboard_rank || "-"}</strong><em>leaderboard</em></article>
+      </div>
+      <div className="service-grid">
+        {serviceCards.map(({ title, description, path, icon: Icon }) => (
+          <button key={title} type="button" className="service-card" onClick={() => navigate(path)}>
+            <div className="service-icon"><Icon size={20} /></div>
+            <div>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </div>
+            <ArrowRight size={18} />
+          </button>
+        ))}
       </div>
       <div className="dashboard-grid">
         <div className="panel progress-panel">

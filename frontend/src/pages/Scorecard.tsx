@@ -82,6 +82,14 @@ export function Scorecard() {
           {(data.recommendations.length ? data.recommendations : ["Submit your first solution to unlock recommendations."]).map((item) => (
             <p key={item}><Sparkles size={16} />{item}</p>
           ))}
+          <div className="score-tips">
+            <h3>Try this next</h3>
+            <ul>
+              <li>Complete a new coding test in <strong>Practice</strong>.</li>
+              <li>Record one answer in <strong>Mock interviews</strong>.</li>
+              <li>Optimize your resume in <strong>Resume analyzer</strong>.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>

@@ -10,6 +10,9 @@ export function Practice() {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [filter, setFilter] = useState<"all" | "easy" | "medium" | "hard">("all");
+
+  const filteredQuestions = questions.filter((question) => filter === "all" || question.difficulty === filter);
 
   useEffect(() => {
     api.get("/questions").then((res) => {
@@ -40,7 +43,15 @@ export function Practice() {
       <div className="practice-layout">
         <div className="question-list">
           <div className="list-title">Problem set</div>
-          {questions.map((q) => <button key={q.id} onClick={() => choose(q)} className={active?.id === q.id ? "selected" : ""}><span>{q.title}</span><small>{q.difficulty} / {q.category}</small></button>)}
+          <div className="filter-pillset">
+            {(["all", "easy", "medium", "hard"] as const).map((level) => (
+              <button key={level} type="button" className={filter === level ? "filter-pill active" : "filter-pill"} onClick={() => setFilter(level)}>
+                {level === "all" ? "All" : level.charAt(0).toUpperCase() + level.slice(1)}
+              </button>
+            ))}
+          </div>
+          {filteredQuestions.map((q) => <button key={q.id} onClick={() => choose(q)} className={active?.id === q.id ? "selected" : ""}><span>{q.title}</span><small>{q.difficulty} / {q.category}</small></button>)}
+          {!filteredQuestions.length && <p className="empty-state">No problems matched that difficulty. Try a different filter.</p>}
         </div>
         <form className="editor-panel" onSubmit={submit}>
           <div className="editor-header">
