@@ -20,6 +20,17 @@ docker compose -f infra/docker/docker-compose.yml up --build
 
 See `docs/deployment-guide.md` for AWS, EKS, Terraform, GitHub Actions, and ArgoCD deployment.
 
+## Frontend Editor Setup
+
+If VS Code shows red errors for imports such as `lucide-react`, `react-router-dom`, JSX tags, or `import.meta.env`, install the frontend dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+If `npm` is not recognized, install Node.js 22 LTS first, then reopen VS Code.
+
 ## EC2 Basic Docker Test
 
 On an EC2 instance with Docker installed, open inbound port `80` in the security group and run:

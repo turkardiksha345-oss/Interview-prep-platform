@@ -1,4 +1,4 @@
-import { BarChart3, BrainCircuit, Code2, FileSearch, ShieldCheck } from "lucide-react";
+import { BarChart3, Bell, BrainCircuit, Code2, FileSearch, Search, ShieldCheck, Sparkles } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
 const links = [
@@ -13,7 +13,13 @@ export function AppShell() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand">PrepForge</div>
+        <div className="brand">
+          <span className="brand-mark"><Sparkles size={20} /></span>
+          <div>
+            <strong>PrepForge</strong>
+            <small>Interview OS</small>
+          </div>
+        </div>
         <nav>
           {links.map(({ to, label, icon: Icon }) => (
             <NavLink key={to} to={to} end={to === "/"} className={({ isActive }) => (isActive ? "active" : "")}>
@@ -22,10 +28,25 @@ export function AppShell() {
             </NavLink>
           ))}
         </nav>
+        <div className="sidebar-card">
+          <span>Weekly focus</span>
+          <strong>System design sprint</strong>
+          <div className="mini-progress"><i /></div>
+        </div>
       </aside>
-      <main className="content">
-        <Outlet />
-      </main>
+      <div className="main-area">
+        <header className="topbar">
+          <div className="searchbox">
+            <Search size={17} />
+            <span>Search questions, companies, resumes</span>
+          </div>
+          <button className="icon-button" aria-label="Notifications"><Bell size={18} /></button>
+          <div className="avatar">DU</div>
+        </header>
+        <main className="content">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

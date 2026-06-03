@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Award, Flame, Target, Trophy } from "lucide-react";
 import { api } from "../api/client";
 
 type Stats = { solved: number; attempted: number; streak_days: number; badges: string[]; leaderboard_rank: number };
@@ -11,21 +12,44 @@ export function Dashboard() {
   }, []);
 
   return (
-    <section>
-      <header className="page-header">
-        <h1>Preparation Dashboard</h1>
-        <p>Track coding, interviews, resume readiness, streaks, and rank from one operating view.</p>
+    <section className="page-enter">
+      <header className="page-header hero-strip">
+        <div>
+          <span className="eyebrow">Placement command center</span>
+          <h1>Preparation Dashboard</h1>
+          <p>Track coding, interviews, resume readiness, streaks, and rank from one operating view.</p>
+        </div>
+        <button className="primary">Start today's plan</button>
       </header>
       <div className="metric-grid">
-        <article><span>Solved</span><strong>{stats.solved}</strong></article>
-        <article><span>Attempts</span><strong>{stats.attempted}</strong></article>
-        <article><span>Streak</span><strong>{stats.streak_days}d</strong></article>
-        <article><span>Rank</span><strong>#{stats.leaderboard_rank || "-"}</strong></article>
+        <article className="metric-card"><Target size={20} /><span>Solved</span><strong>{stats.solved}</strong><em>+3 this week</em></article>
+        <article className="metric-card"><BarIcon /><span>Attempts</span><strong>{stats.attempted}</strong><em>accuracy improving</em></article>
+        <article className="metric-card"><Flame size={20} /><span>Streak</span><strong>{stats.streak_days}d</strong><em>keep momentum</em></article>
+        <article className="metric-card"><Trophy size={20} /><span>Rank</span><strong>#{stats.leaderboard_rank || "-"}</strong><em>leaderboard</em></article>
       </div>
-      <div className="panel">
-        <h2>Badges</h2>
-        <div className="badges">{stats.badges.length ? stats.badges.map((b) => <span key={b}>{b}</span>) : <span>Start solving to unlock badges</span>}</div>
+      <div className="dashboard-grid">
+        <div className="panel progress-panel">
+          <h2>Roadmap Progress</h2>
+          {["Arrays and Hashing", "Dynamic Programming", "System Design", "Behavioral Stories"].map((item, index) => (
+            <div className="progress-row" key={item}>
+              <span>{item}</span>
+              <div className="progress-track"><i style={{ width: `${72 - index * 13}%` }} /></div>
+            </div>
+          ))}
+        </div>
+        <div className="panel">
+          <h2>Badges</h2>
+          <div className="badges">
+            {(stats.badges.length ? stats.badges : ["First Solve", "Resume Ready", "Mock Interview"]).map((b) => (
+              <span key={b}><Award size={15} />{b}</span>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
+}
+
+function BarIcon() {
+  return <span className="bar-icon"><i /><i /><i /></span>;
 }

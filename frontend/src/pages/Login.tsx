@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/client";
 
@@ -26,8 +27,15 @@ export function Login() {
 
   return (
     <main className="auth-page">
+      <section className="auth-showcase">
+        <div className="brand large"><span className="brand-mark"><Sparkles size={22} /></span><div><strong>PrepForge</strong><small>Interview OS</small></div></div>
+        <h1>Practice, analyze, and ship your interview prep in one place.</h1>
+        <div className="auth-checks">
+          {["Coding tracker", "AI mock interviews", "ATS resume insights"].map((item) => <span key={item}><CheckCircle2 size={16} />{item}</span>)}
+        </div>
+      </section>
       <form className="auth-panel" onSubmit={submit}>
-        <h1>PrepForge</h1>
+        <h2>{mode === "login" ? "Welcome back" : "Create your workspace"}</h2>
         <div className="segmented">
           <button type="button" className={mode === "login" ? "selected" : ""} onClick={() => setMode("login")}>Login</button>
           <button type="button" className={mode === "signup" ? "selected" : ""} onClick={() => setMode("signup")}>Signup</button>
@@ -35,7 +43,7 @@ export function Login() {
         <label>Email<input value={email} onChange={(e) => setEmail(e.target.value)} /></label>
         <label>Password<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></label>
         {error && <p className="error">{error}</p>}
-        <button className="primary" type="submit">{mode === "login" ? "Login" : "Create account"}</button>
+        <button className="primary" type="submit">{mode === "login" ? "Login" : "Create account"}<ArrowRight size={16} /></button>
       </form>
     </main>
   );
