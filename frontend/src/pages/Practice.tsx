@@ -9,6 +9,7 @@ export function Practice() {
   const [active, setActive] = useState<Question | null>(null);
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("");
+  const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
     api.get("/questions").then((res) => {
@@ -22,6 +23,7 @@ export function Practice() {
     setActive(question);
     setCode(question.starter_code);
     setStatus("");
+    setFeedback("");
   }
 
   async function submit(event: FormEvent) {
@@ -29,6 +31,7 @@ export function Practice() {
     if (!active) return;
     const { data } = await api.post("/submissions", { question_id: active.id, language: "python", code });
     setStatus(`${data.status} - score ${data.score}`);
+    setFeedback(data.feedback);
   }
 
   return (
@@ -55,6 +58,7 @@ export function Practice() {
             <button className="primary" type="submit"><Send size={16} />Submit</button>
             <span className="status-pill">{status}</span>
           </div>
+          {feedback && <div className="feedback-box">{feedback.split("\n").map((line) => <p key={line}>{line}</p>)}</div>}
         </form>
       </div>
     </section>

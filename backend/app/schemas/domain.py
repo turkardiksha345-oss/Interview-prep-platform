@@ -64,6 +64,7 @@ class SubmissionRead(BaseModel):
     language: str
     status: str
     score: int
+    feedback: str
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -99,3 +100,13 @@ class DashboardStats(BaseModel):
     streak_days: int
     badges: list[str]
     leaderboard_rank: int
+
+
+class Scorecard(BaseModel):
+    total_submissions: int
+    solved: int
+    average_score: float
+    best_score: int
+    accuracy: float
+    latest_submissions: list[SubmissionRead]
+    recommendations: list[str]

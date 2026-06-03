@@ -211,6 +211,17 @@ button { cursor: pointer; }
   border-radius: 8px;
   padding: 9px 11px;
 }
+.feedback-box {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #2f855a;
+  border-radius: 8px;
+  color: #d1fae5;
+  background: rgba(21, 115, 71, 0.16);
+  animation: rise 260ms ease both;
+}
+.feedback-box p { margin: 0 0 8px; }
+.feedback-box p:last-child { margin-bottom: 0; }
 
 .practice-layout { display: grid; grid-template-columns: 330px 1fr; gap: 18px; align-items: start; }
 .question-list {
@@ -311,6 +322,75 @@ label { display: grid; gap: 5px; color: #3d4b5b; }
 .ats-score span { font-size: 20px; color: var(--muted); }
 .activity-list { display: grid; gap: 10px; }
 .activity-list span { padding: 12px; border-radius: 8px; background: #f3f7fb; color: #334155; }
+.score-ring {
+  --score: 0%;
+  width: 118px;
+  height: 118px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at center, #fff 58%, transparent 59%),
+    conic-gradient(var(--green) var(--score), #dce5ee 0);
+  box-shadow: var(--shadow);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+.score-ring strong {
+  display: block;
+  color: var(--ink);
+  font-size: 28px;
+  line-height: 1;
+  text-align: center;
+}
+.score-ring span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: center;
+}
+.submission-table { display: grid; gap: 12px; }
+.submission-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  animation: rise 320ms ease both;
+}
+.submission-row strong { font-size: 22px; color: var(--green); }
+.submission-row em {
+  border-radius: 999px;
+  padding: 6px 9px;
+  color: #92400e;
+  background: #fef3c7;
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 800;
+}
+.submission-row em.accepted { color: #166534; background: #dcfce7; }
+.submission-row p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  white-space: pre-line;
+}
+.recommendations { display: grid; gap: 10px; }
+.recommendations p {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  margin: 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: #eef7f3;
+  color: #176349;
+}
 
 .auth-page {
   min-height: 100vh;

@@ -57,6 +57,7 @@ class Submission(Base):
     code: Mapped[str] = mapped_column(Text)
     status: Mapped[str] = mapped_column(String(40), default="queued")
     score: Mapped[int] = mapped_column(Integer, default=0)
+    feedback: Mapped[str] = mapped_column(Text, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     user: Mapped[User] = relationship(back_populates="submissions")

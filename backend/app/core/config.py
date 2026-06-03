@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     smtp_user: str | None = None
     smtp_password: str | None = None
     s3_bucket: str | None = None
+    evaluator_url: str = "http://code-evaluator:9000"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

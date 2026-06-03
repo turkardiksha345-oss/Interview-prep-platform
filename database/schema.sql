@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS submissions (
   code TEXT NOT NULL,
   status VARCHAR(40) NOT NULL DEFAULT 'queued',
   score INTEGER NOT NULL DEFAULT 0,
+  feedback TEXT NOT NULL DEFAULT '',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

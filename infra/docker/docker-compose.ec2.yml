@@ -21,12 +21,21 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://postgres:${POSTGRES_PASSWORD:-change-this-db-password}@postgres:5432/interviewprep
       JWT_SECRET: ${JWT_SECRET:-change-this-jwt-secret}
+      EVALUATOR_URL: http://code-evaluator:9000
       ENVIRONMENT: ec2
     depends_on:
       postgres:
         condition: service_healthy
+      code-evaluator:
+        condition: service_started
     expose:
       - "8000"
+
+  code-evaluator:
+    build: ../../services/code-evaluator
+    restart: unless-stopped
+    expose:
+      - "9000"
 
   frontend:
     build: ../../frontend

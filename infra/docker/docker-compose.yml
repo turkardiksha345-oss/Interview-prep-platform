@@ -22,11 +22,19 @@ services:
       DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/interviewprep
       JWT_SECRET: local-dev-secret
       CORS_ORIGINS: '["http://localhost:5173","http://localhost"]'
+      EVALUATOR_URL: http://code-evaluator:9000
     depends_on:
       postgres:
         condition: service_healthy
+      code-evaluator:
+        condition: service_started
     ports:
       - "8000:8000"
+
+  code-evaluator:
+    build: ../../services/code-evaluator
+    ports:
+      - "9000:9000"
 
   frontend:
     build: ../../frontend

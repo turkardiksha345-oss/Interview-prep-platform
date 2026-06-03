@@ -14,6 +14,7 @@ from app.schemas.domain import (
     QuestionRead,
     ResumeAnalyzeRequest,
     ResumeAnalyzeResponse,
+    Scorecard,
     SubmissionCreate,
     SubmissionRead,
     Token,
@@ -21,6 +22,7 @@ from app.schemas.domain import (
     UserLogin,
     UserRead,
 )
+from app.services.evaluator import evaluate_submission
 from app.services.interview import score_mock_interview
 from app.services.resume import analyze_resume
 
@@ -83,14 +85,16 @@ def submit_code(payload: SubmissionCreate, db: Session = Depends(get_db), user: 
     question = db.get(Question, payload.question_id)
     if question is None:
         raise HTTPException(status_code=404, detail="Question not found")
-    status_value = "accepted" if "return" in payload.code or "print" in payload.code else "needs_review"
+    evaluation = evaluate_submission(payload.question_id, payload.language, payload.code)
+    feedback = evaluation.get("feedback", [])
     submission = Submission(
         user_id=user.id,
         question_id=payload.question_id,
         language=payload.language,
         code=payload.code,
-        status=status_value,
-        score=100 if status_value == "accepted" else 40,
+        status=str(evaluation.get("status", "needs_review")),
+        score=int(evaluation.get("score", 0)),
+        feedback="\n".join(str(item) for item in feedback) if isinstance(feedback, list) else str(feedback),
     )
     db.add(submission)
     user.streak_days = max(user.streak_days, 1)
@@ -102,6 +106,36 @@ def submit_code(payload: SubmissionCreate, db: Session = Depends(get_db), user: 
 @router.get("/submissions", response_model=list[SubmissionRead])
 def my_submissions(db: Session = Depends(get_db), user: User = Depends(current_user)) -> list[Submission]:
     return list(db.scalars(select(Submission).where(Submission.user_id == user.id).order_by(desc(Submission.created_at))).all())
+
+
+@router.get("/scorecard", response_model=Scorecard)
+def scorecard(db: Session = Depends(get_db), user: User = Depends(current_user)) -> Scorecard:
+    submissions = list(
+        db.scalars(select(Submission).where(Submission.user_id == user.id).order_by(desc(Submission.created_at))).all()
+    )
+    solved = sum(1 for item in submissions if item.status == "accepted")
+    total = len(submissions)
+    average = round(sum(item.score for item in submissions) / total, 1) if total else 0.0
+    best = max((item.score for item in submissions), default=0)
+    accuracy = round((solved / total) * 100, 1) if total else 0.0
+    recommendations = []
+    if average < 70:
+        recommendations.append("Focus on returning a clear result and explaining edge cases in each solution.")
+    if solved < 3:
+        recommendations.append("Solve at least three easy or medium problems to stabilize your baseline.")
+    if best >= 90:
+        recommendations.append("You have high-scoring submissions. Move one level up in difficulty.")
+    if not recommendations:
+        recommendations.append("Keep the streak alive and add timed mock tests this week.")
+    return Scorecard(
+        total_submissions=total,
+        solved=solved,
+        average_score=average,
+        best_score=best,
+        accuracy=accuracy,
+        latest_submissions=submissions[:6],
+        recommendations=recommendations,
+    )
 
 
 @router.post("/mock-interviews", response_model=MockInterviewRead, status_code=201)

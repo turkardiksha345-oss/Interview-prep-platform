@@ -16,9 +16,24 @@ docker compose -f infra/docker/docker-compose.yml up --build
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:8000/api/v1/health
+- Code Evaluator: http://localhost:9000/health
 - OpenAPI: http://localhost:8000/docs
 
 See `docs/deployment-guide.md` for AWS, EKS, Terraform, GitHub Actions, and ArgoCD deployment.
+
+## App Flow
+
+1. Create an account or login from `/login`.
+2. Open Practice and submit a coding solution.
+3. The backend sends the submission to the `code-evaluator` microservice.
+4. Open Scorecard to review average score, best score, accuracy, feedback, and recommendations.
+
+If you already started Docker before this scorecard update, recreate the database volume so PostgreSQL picks up the new `feedback` column:
+
+```bash
+docker compose -f infra/docker/docker-compose.yml down -v
+docker compose -f infra/docker/docker-compose.yml up --build
+```
 
 ## Frontend Editor Setup
 
